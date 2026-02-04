@@ -1,0 +1,13 @@
+body.login {
+  background-color: #2977B1;
+}
+body.login #nav a,
+body.login #backtoblog a {
+  color: #FFF;
+}
+body.login h1 a {
+  background-image: url("../img/brasao-login.webp");
+  background-size: 100%;
+  width: 256px;
+  height: 84px;
+}/*# sourceMappingURL=pmi_login.css.map */

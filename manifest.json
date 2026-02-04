@@ -1,0 +1,16 @@
+{
+  "name": "Descubra Itabirito Webapp",          // Full app name (shown in install prompt)
+  "short_name": "Descubra Itabirito",        // Short name (for home screen icon)
+  "description": "Tudo o que você precisa saber para curtir Itabirito", // Optional: Shown in the prompt
+  "start_url": "/descubra-itabirito",                  // URL to launch when opened
+  "display": "fullscreen",           // "standalone", "fullscreen", or "minimal-ui"
+  "background_color": "#4285f4",     // Background color for splash screen
+  "theme_color": "#4285f4",          // Color for browser UI (e.g., status bar)
+  "icons": [                         // Icons for different device sizes
+    {
+      "src": "https://itabirito.mg.gov.br/wp-content/uploads/2026/01/descubra-itabirito.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

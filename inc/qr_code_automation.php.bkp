@@ -1,0 +1,142 @@
+<?php
+
+
+// Add this to your theme's functions.php or a custom plugin
+add_action('wpforms_process_complete', 'create_qr_code_from_form_submission', 10, 4);
+
+function create_qr_code_from_form_submission($fields, $entry, $form_data, $entry_id) {
+    // RESTRICT TO SPECIFIC FORM ID - Change this to your form's ID
+    $target_form_id = 96335; // Replace with your actual form ID
+    if ($form_data['id'] != $target_form_id) {
+        return; // Exit if not the target form
+    }
+    
+    // Check if Dynamic QR Code plugin is active
+    if (!class_exists('SOSIDEE_DYNAMIC_QRCODE\SosPlugin')) {
+        error_log('Dynamic QR Code plugin not found');
+        return;
+    }
+    
+    // Get the plugin instance
+    $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+    
+// If you have specific field IDs, use them:
+$user_email = $fields[2]['value']; // Field ID 2 for email
+$user_name = $fields[1]['value'];  // Field ID 1 for name
+    
+    if (empty($user_email)) {
+        error_log('No email found in form submission');
+        return;
+    }
+    
+    // Create unique code for this user
+    $unique_code = 'CPDAP_' . $entry_id . '_' . time();
+    
+    // Customize the redirect URL based on your needs
+    $redirect_url = home_url('/thank-you/?entry=' . $entry_id);
+    // Or create a personalized URL: 
+    // $redirect_url = home_url('/user-dashboard/?code=' . $unique_code);
+    
+    // Prepare QR code data
+    $qr_data = [
+        'disabled' => false,
+        'code' => $unique_code,
+        'description' => 'QR Code for ' . $user_name . ' (Entry #' . $entry_id . ')',
+        'url_redirect' => $redirect_url,
+        'url_inactive' => '',
+        'url_expired' => '',
+        'date_from' => null, // Start date (null = immediately active)
+        'date_to' => null,   // End date (null = never expires)
+        'time_from' => null,
+        'time_to' => null,
+        'dotw' => 0, // Days of week (0 = all days)
+        'priority' => false,
+        'max_scan_tot' => 0, // 0 = unlimited scans
+        'url_finished' => '',
+        'cypher' => '',
+        'url_cypher' => '',
+        'only_mfa' => false,
+        'device_os' => 0, // 0 = all devices
+        'device_lang' => '',
+        'img_forecolor' => '#000000',
+        'img_backcolor' => '#ffffff'
+    ];
+    
+    // Save the QR code to database
+    $qr_id = $plugin->database->saveQrCode($qr_data);
+    
+    if ($qr_id !== false) {
+        // QR code created successfully - send notification email
+        send_qr_code_notification($user_email, $user_name, $qr_id, $entry_id);
+        
+        // Log success
+        error_log("QR Code created successfully: ID {$qr_id} for entry {$entry_id}");
+    } else {
+        // Log error
+        error_log("Failed to create QR code for form entry {$entry_id}");
+    }
+}
+
+function send_qr_code_notification($user_email, $user_name, $qr_id, $entry_id) {
+    // Email subject
+    $subject = 'Your Personal QR Code';
+    
+    // Email content with QR code shortcode
+    $message = "
+    <html>
+    <body>
+        <h2>Hello " . esc_html($user_name) . ",</h2>
+        
+        <p>Thank you for your submission! Here's your personal QR code:</p>
+        
+        <div style='text-align: center; margin: 20px 0;'>
+            [dynqrcode display={$qr_id} size=200]
+        </div>
+        
+        <p>You can scan this QR code with your mobile device to access your personalized content.</p>
+        
+        <p>Entry ID: {$entry_id}</p>
+        
+        <p>Best regards,<br>Your Website Team</p>
+    </body>
+    </html>
+    ";
+    
+    // Email headers
+    $headers = [
+        'Content-Type: text/html; charset=UTF-8',
+        'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
+    ];
+    
+    // Process shortcodes in email content
+    $message = do_shortcode($message);
+    
+    // Send email
+    $sent = wp_mail($user_email, $subject, $message, $headers);
+    
+    if (!$sent) {
+        error_log("Failed to send QR code email to: {$user_email}");
+    } else {
+        error_log("QR code email sent successfully to: {$user_email}");
+    }
+}
+
+// Optional: Add admin notification
+function send_admin_qr_notification($qr_id, $entry_id, $user_email) {
+    $admin_email = get_option('admin_email');
+    $subject = 'New QR Code Generated - Entry #' . $entry_id;
+    
+    $message = "
+    A new QR code has been generated:
+    
+    Entry ID: {$entry_id}
+    QR Code ID: {$qr_id}
+    User Email: {$user_email}
+    
+    You can manage this QR code in the WordPress admin panel.
+    ";
+    
+    wp_mail($admin_email, $subject, $message);
+}
+
+?>

@@ -1,0 +1,1531 @@
+.text-white
+    a
+        color: #FFF !important
+
+@font-face
+    font-family: 'Goldplay Regular'
+    src: url(webfonts/Goldplay-Regular.woff2)
+
+@font-face
+    font-family: 'Goldplay Medium'
+    src: url(webfonts/Goldplay-Medium.woff)
+
+@font-face
+    font-family: 'Goldplay Bold'
+    src: url(webfonts/Goldplay-Bold.woff2)
+
+@font-face
+    font-family: 'Gelion Bold' 
+    src: url(webfonts/gelion-bold.woff)
+
+@font-face 
+    font-family: 'Gelion Medium'
+    src: url(webfonts/gelion-medium.woff)
+
+@font-face 
+    font-family: 'Alkaline Bold'
+    src: url(webfonts/alkaline.otf)
+
+.pd-nav
+    .has-small-font-size
+        font-size: 0.9rem !important
+        font-weight: 700
+        a
+            padding: 0.5rem !important
+.categoria-plano-diretor
+    display: inline-block
+    width: 50%
+    a
+        color: #000 !important 
+        font-size: 1.2rem
+        font-style: italic
+.pd-bt
+    font-size: 0.95rem
+    font-weight: 700
+    a
+        color: #FFF !important
+
+$azulC: #90D7F6
+$azul: #0277B1
+$mazul: #083898
+$purpura: #660FA3
+$vermelho: #FF1A1A
+
+.bg-vermelho
+    background-color: $vermelho
+.bg-azul
+    background-color: $mazul
+.bg-purpura
+    background-color: $purpura
+.bg-search
+    background-color: #EBEBEB
+
+img
+    display: block
+
+html, body
+    height: 100%
+    font-family: 'Goldplay Regular'
+    font-size: 12pt
+body
+    font-family: 'Goldplay Regular'
+    p, table, li
+        font-family: 'Goldplay Regular'
+    h1, h2, h3, h4, h5, h6, thead
+        font-family: 'Gelion Bold'
+    a
+        font-family: 'Goldplay Medium'
+    .btn
+        font-family: 'Gelion Bold' !important
+    &.admin-bar
+        .modal-servicos
+            top: 32px
+    .main
+        font-family: 'Goldplay Regular'
+        strong
+            font-family: 'Goldplay Bold'
+    &.single-programacao
+        .main
+            h3
+                font-size: 1.5rem
+            h4
+                font-size: 1.2rem
+                font-weight: 500
+                color: #999
+                font-style: italic
+            p
+                text-align: justify
+                color: #666
+
+    .modal-servicos
+        position: fixed
+        z-index: 99999999999
+        display: none
+        background-color: rgba(0,0,0,0.5)
+        top: 0
+        right: 0
+        bottom: 0
+        left: 0
+        .modal-list
+            overflow-y: scroll
+            width: 95%
+            height: 95%
+            margin: auto
+            background-color: #FFF
+            border: solid 1px $azul
+            border-radius: 0.5rem
+            box-shadow: 0 2px 3px rgba(0,0,0,0.25)
+            &.loading
+                background-image: url('../img/pulse.svg')
+                background-position: center
+                background-repeat: no-repeat
+            .listhead
+                background-color: $azul
+                color: #FFF
+                h3
+                    margin-bottom: 0
+                a
+                    color: #FFF
+                    svg
+                        width: 24px
+                        height: auto
+            .servicelist
+                list-style: none
+                li
+                    display: inline-block
+                    margin: 0.25rem
+    
+    &> .main-container
+        &::after
+            background-color: #FFF !important
+
+    .h-full
+        height: calc(100% - 172px)
+
+    &.home
+        #noticias
+            .programacao
+                background-color: $azulC
+                .card-text
+                    &::after
+                        font: var(--fa-font-solid)
+                        content: "\f073"
+                        margin-right: 0.5rem
+            img
+                width: 100%
+                height: auto
+                aspect-ratio: 3 / 2
+    #intraaccess
+        background-color: #EFAC14
+        color: #000
+
+        nav.goto
+            .nav-item
+                .nav-link
+                    color: #999
+    #pagetop
+        background-color: $mazul
+        z-index: 9999999
+        height: 65px
+        display: flex
+        flex-direction: column
+        .container
+            margin: auto
+    .bg-amarelo
+        background-color: #EBEBEB
+    .custom-logo-link
+        margin: auto 1rem auto 0
+        display: block
+        img
+            height: 40px
+            width: auto
+    span.data
+        margin: auto 0
+        font-weight: 700
+        color: #000
+    ul.institucional
+        .nav-item
+            .nav-link
+                color: #999
+    ul.social
+        .nav-item
+            .nav-link
+                font-size: 0
+                padding: 0 0.25rem
+                svg
+                    width: 20px
+                    height: auto
+                    color: #FFF
+                
+    .servicos
+        .nav-link
+            color: #FFF
+            &.active
+                color: $purpura
+    #maintop
+        position: relative
+        height: calc(100% - 155px)
+        //max-height: 700px
+        background-repeat: no-repeat
+        background-color: #BCBCBC !important
+        background-position: 88% 50%
+        background-image: url('../img/brasao.svg')
+        .atalhos
+            box-shadow: 0 2px 3px rgba(0,0,0,0.25)
+            width: 100%
+            height: 100%
+            //height: 490px
+            //border-radius: 0.5rem
+            background-color: $mazul
+            padding: 0.5rem
+            overflow: hidden
+            //border: solid 2px #FFF
+            .quick
+                margin: 0
+                padding: 0
+                li
+                    width: 100%
+                    margin: 0.3rem 0
+                    a
+                        font-family: 'Gelion'
+                        display: flex
+                        width: 100%
+                        //border: solid 2px #EFAC14
+                        //border-radius: 0.5rem
+                        //text-align: center
+                        font-size: 1.1rem
+                        font-weight: 700
+                        padding: 0.2rem 0.5rem 
+                        color: #FFF
+                        background-color: $azul
+                        text-decoration: none
+                        &:hover
+                            background-color: #EFAC14
+                            color: #000
+                            //border: solid 2px #FFF
+                            &::after
+                                content: "\f0da"
+                                font: var(--fa-font-solid)
+                                width: 10px
+                                margin: auto 0 auto auto                   
+    #descubraita.slide.carousel
+        height: 100%
+        &>.carousel-inner
+            height: 100%
+            .carousel-item
+                display: flex
+                height: 100%
+                background-color: #BBB
+                background-size: cover
+                background-repeat: no-repeat
+                background-position: center
+                background-blend-mode: multiply
+        .descubra
+            position: absolute
+            bottom: 40%
+            left: 8%
+            right: 8%
+            z-index: 12
+            h1
+                text-transform: uppercase
+                text-align: center
+                line-height: 4.4rem
+                letter-spacing: -2px
+                text-shadow: 0 2px 5px rgba(0,0,0,0.5)
+                a
+                    font-family: 'Gelion Bold'
+                    color: #fff
+                    text-decoration: none
+                    font-size: 4rem
+    .main_turismo
+        display: flex
+        background-size: 100%
+        background-repeat: no-repeat
+        background-position: center
+        width: 100%
+        height: 100%
+        border-radius: 0.5rem
+        overflow: hidden
+        transition: background-size 5s
+        .wp-block-cover, .wp-block-cover-image
+            width: 100%
+        h1
+            margin: auto 2rem 2rem auto
+            a
+                font-family: 'Gelion Bold'
+                color: #fff
+                text-decoration: none
+                font-size: 2.5rem
+                text-shadow: 0 2px 5px rgba(0,0,0,0.5)
+        &:hover
+            background-size: 110%
+        
+    .banner
+        //border: solid 2px #FFF
+        aspect-ratio: 3/2
+        //border-radius: 0.5rem
+        overflow: hidden
+        box-shadow: 0 2px 3px rgba(0,0,0,0.25)
+        .carousel,
+        .carousel-inner,
+        .carousel-item
+            width: 100%
+            height: 100%
+            .carousel-item
+                img
+                    width: 100%
+                    height: auto
+                    aspect-ratio: 3/2
+        .acessorapido
+            z-index: 20
+            display: flex
+            flex-direction: column
+            width: 100%
+            bottom: 0
+            background-color: #Fc0
+            h6
+                text-align: center
+                text-transform: uppercase
+                font-weight: 700
+                background-color: #000
+                color: #fc0
+            li
+                margin: 0 auto
+                display: inline-block
+                a
+                    color: #000
+                    font-size: 0.9rem
+                    font-weight: 700
+                    padding: 0.25rem
+                    text-decoration: none
+                &:hover
+                    background-color: #000
+                    a
+                        color: #FC0
+        
+    .whatsnew
+        background-color: #008EFF
+        span
+            font-weight: 900
+        .season,
+        .social
+            list-style: none
+            margin: 0.5rem 0
+            padding: 0
+            .menu-item
+                display: flex
+                a
+                    margin: auto
+                    color: #FFF
+                    display: block
+                    padding: 0.5rem 0.5rem
+                    font-weight: 400
+                    &:hover
+                        color: #b41466
+                        svg
+                            color: #b41466
+                ul
+                    display: none
+            
+    #area_servico
+        ul
+            list-style: none
+            padding: 0
+            margin: 0 auto
+            text-align: center
+            &.atendimento
+                margin-bottom: 2rem
+                li
+                    a
+                        display: block
+                        width: 100%
+                        font-size: 1.8rem
+                        padding: 1.8rem 2rem 1rem
+                        font-weight: 700
+                        text-transform: uppercase
+                        svg
+                            display: block
+                            height: 24px
+                            width: auto
+                            margin: auto
+                    &:last-child
+                        display: block
+                        width: 35%
+                        margin: 1rem auto
+                        a
+                            font-size: 1.2rem
+                            padding: 0.5rem 1rem
+            li
+                display: inline-block
+                a
+                    &:hover
+                        box-shadow: 0 2px 3px rgba(0,0,0,0.3)
+
+    .estabelecimento
+        &>div
+            &:hover
+                box-shadow: 0 1px 3px rgba(0,0,0,0.35)
+        h6
+            font-weight: 700
+            a
+                color: #000
+                text-decoration: none
+                &::after
+                    content: "\f0da"
+                    font: var(--fa-font-solid)
+                    margin-left: 0.25rem
+        ul
+            list-style: none
+            padding-left: 1.5rem
+            i
+                margin-right: 0.25rem
+
+    .entry-item
+        border-bottom: solid 1px #CCC
+
+    .fheadN,
+    .fheadP
+        a
+            text-decoration: none
+
+    .fheadN
+        a
+            color: #999
+
+    .fheadP
+        a
+            color: #999    
+
+    .owl-item
+        box-shadow: 0 3px 6px rgba(0,0,0,0.35)
+        border-radius: 0.5rem
+        overflow: hidden
+        margin-bottom: 0.5rem
+        img
+            height: auto
+        .card
+            position: relative
+            .card-body
+                background-color: $mazul
+                min-height: 118px
+                padding: 0.5rem 0.5rem 0.5rem 1rem
+                font-weight: 400
+                color: #FFF
+            .overlay
+                position: absolute
+                width: 100%
+                height: 100%
+                background-color: rgba(102,15,163,0.75)
+                opacity: 0
+                transition: opacity 0.5s
+                display: flex
+                a
+                    margin: auto
+            &:hover
+                .card-body
+                    color: #fff
+                    border-right: 0
+                .overlay
+                    opacity: 1
+    #programacao
+        background-color: #EBEBEB
+        .overlay
+            a
+                font-size: 1.4rem
+    .pagetitle
+        text-transform: uppercase
+        color: #000
+        font-size: 3rem
+        line-height: 2.4rem
+        margin: 0 0 0 auto
+        padding: 0
+        width: 75%
+
+    &.single-noticia
+        .main
+            .col-lg-9
+                img[srcset],
+                p img
+                    width: 100%
+                    height: auto
+    .main
+        .loadmore
+            color: #fff
+            background-color: $purpura
+            &:hover
+                color: $purpura
+                background-color: transparent
+                border: solid 1px $purpura
+        padding: 3rem 0
+        strong
+            font-weight: 100
+        .left_menu,
+        .left_menu ul
+            text-align: right
+            list-style: none
+            li
+                font-weight: 900
+                line-height: 1.2rem
+                margin-bottom: 0.35rem
+                a
+                    font-size: 1.2rem
+                    text-decoration: none
+                    color: #BBB
+                    &::before
+                        content: "\f0da"
+                        font: var(--fa-font-solid)
+                        margin-right: 0.25rem
+                        color: $vermelho
+                    &:hover
+                        color: $vermelho
+        
+        .filter
+            a
+                display: block
+                color: $vermelho
+                font-weight: 900
+
+        .parent
+            position: relative
+            font-weight: 900
+            font-size: 1.4rem
+            text-align: right
+            a
+                color: $vermelho
+                text-decoration: none
+                text-transform: uppercase
+                display: inline-block
+                font-size: 1rem
+                &:hover
+                    i
+                        color: #000
+            .parent_menu
+                position: absolute
+                right: 0
+                display: none
+                font-size: 0.85rem
+                background-color: #FFF
+                a
+                    margin-top: 0.5rem
+                    font-family: 'Goldplay Regular'
+                    font-size: 1rem
+                    font-weight: 100
+                    text-transform: capitalize
+            &:hover
+                .parent_menu
+                    display: block
+            svg
+                width: 18px
+                height: 18px
+        .entry-item
+            a
+                color: $vermelho
+                text-decoration: none
+                &:hover
+                    text-decoration: underline
+                
+            .clube
+                padding: 3rem
+                .wp-block-column:first-child
+                    display: flex
+                    flex-direction: column
+                .wp-block-image
+                    margin: auto
+                    img
+                        max-width: 240px
+                        height: auto
+                        mix-blend-mode: multiply
+        .evento_chamada
+            a
+                text-decoration: none
+                h6
+                    font-weight: 700
+                    font-size: 1.2rem
+                img
+                    width: 100%
+                    height: auto
+                    margin-bottom: 0.75rem
+            .btn
+                display: block
+        h2,
+        h3,
+        h4
+            font-weight: 700
+        
+        .nextitem
+            display: table
+            padding: 0.5rem
+
+            h6
+                color: $vermelho
+                font-weight: 700
+
+        .col-lg-12.nextitem
+            img
+                width: 256px
+                height: auto
+                float: left
+                margin-right: 1rem
+
+        .card-header
+            h5
+                *
+                    color: $vermelho
+                button
+                    font-weight: 700
+                    text-decoration: none
+                    text-align: left
+                    a
+                        text-decoration: none
+        .card-body
+            h3,
+            h4
+                font-weight: 700
+        .wp-block-details
+            padding: 0.25rem 0.5rem
+            background-color: #ebebeb
+            border-bottom: solid 1px #CCC
+            summary
+                font-weight: 700
+            p
+                margin-left: 1rem
+            &.last
+                margin-bottom: 1.5rem
+            ul
+                list-style: circle
+    
+    .page-numbers
+        padding: 0
+        list-style: none
+        text-align: center
+        li
+            display: inline-block
+            a, span
+                color: #999999
+                display: block
+                padding: 0.5rem 1rem
+                border-radius: 0.5rem
+                border: 1px solid #CCCCCC
+                transition: background-color .3s
+                background-color: transparent
+                &:hover
+                    background-color: #CCCCCC
+                    color: #000000
+                    text-decoration: none
+
+            span.current
+                background-color: #666666
+                color: #ffffff
+                font-weight: 700
+
+    .wp-block-list
+        margin: 0 0 1rem 2rem
+        padding: 0
+        list-style: none
+        a
+            color: #666
+            text-decoration: none
+            &:hover
+                color: $vermelho
+            &:after
+                content: "\f0da"
+                font: var(--fa-font-solid)
+                margin-left: 0.25rem
+                color: $vermelho
+
+    .wp-block-file
+        margin-bottom: 0.25rem
+        display: flex
+        background-color: #ebebeb
+        border-bottom: solid 1px #ccc
+        flex-direction: row
+        a:not(.wp-block-file__button)
+            margin: auto auto auto 1rem
+        &:has(.wp-block-file__embed)
+            display: inline-block
+            .wp-block-file__embed
+                margin-bottom: 0 !important
+            a[id*='wp-block-file--media-']
+                margin: 1rem
+            .wp-block-file__button
+                width: 100%
+                margin-left: 0 0 0 auto
+                text-align: center
+        .wp-block-file__button
+                color: #666
+                margin-left: auto
+                color: #fff !important
+                border-radius: 0.25rem
+                font-weight: 700
+                &:after
+                    content: "\f019"
+                    font: var(--fa-font-solid)
+                    margin-left: 0.25rem
+    
+
+    .event-card
+        border: solid 1px #CCc
+        margin-bottom: 2rem
+        h1
+            font-size: 2rem
+            font-weight: 900
+        p
+            margin: 0.25rem 0
+            label
+                font-weight: 700
+                margin-right: 0.5rem
+        img
+            width: 100%
+            height: auto
+
+    h2
+        font-weight: 900
+
+    form
+        button
+            right: 0
+    
+    &.page-child
+        #servicos
+            background-color: #BBB
+            h3
+                color: #333
+            #menu-servicos
+                li
+                    a
+                        color: #333
+                        border-color: #333
+                        &:hover
+                            color: $purpura
+                            border-color: $purpura
+
+    #servicos
+        padding: 5rem
+        background-color: $purpura
+        h3
+            color: #FFF
+            text-align: center
+            font-weight: 900
+            span
+                display: block
+                font-weight: 100
+
+    .destaque-menu
+        ul
+            margin: auto
+            display: flex
+            li.nav-item
+                margin: 0 1rem
+                a.nav-link
+                    font-weight: 900
+                    background-color: $vermelho
+                    display: flex
+                    flex-direction: column
+                    text-align: center
+                    padding-top: 2rem
+                    border-radius: 0.5rem
+                    font-size: 1.4rem
+                    height: 65%
+                    font-family: 'Gelion Bold'
+                    color: $vermelho
+                    //-webkit-text-fill-color: #FFF
+                    svg
+                        display: block
+                        margin: auto
+                        width: auto
+                        height: 150px
+                        margin-bottom: 2rem
+                        color: #FFF
+                    p
+                        font-size: 0.9rem
+                        margin: 0 1rem
+                        font-weight: 100
+                        font-family: 'Goldplay Regular'
+                        span
+                            display: block
+                            font-weight: 400
+
+    .instagram
+        padding: 5rem 0
+        background-color: #EBEBEB
+
+    .breadcrumbs-wrap
+        background-color: #EBEBEB
+        box-shadow: inset 0 -10px 10px rgba(0,0,0,0.1)
+        .breadcrumbs
+            margin-bottom: 2rem
+            a
+                color: #666
+                font-size: 1rem
+                text-decoration: none
+                &:before
+                    color: #666
+                &.home
+                    font-weight: 700
+        .single-title
+            text-align: right
+            font-family: 'Gelion Bold'
+            font-size: 3rem
+            text-transform: uppercase
+            color: $mazul
+            line-height: 2.4rem
+            margin: 0 0 0 auto
+            padding: 0
+            a
+                font-family: 'Gelion Bold'
+                color: $mazul
+                text-decoration: none
+                &:hover
+                    color: #333
+        .print
+            display: block
+            width: auto
+            margin-left: auto
+            float: right
+
+    .menu-children
+        list-style: none
+        a
+            text-decoration: none
+            font-size: 1.2rem
+            font-weight: 900
+            color: #000
+            line-height: 1rem
+            &:hover
+                font-size: 1.4rem
+                color: $purpura
+
+    .ev_cats
+        list-style: none
+        padding: 0
+        margin: 0
+        li
+            text-align: right
+            line-height: 1rem
+            a
+                font-size: 1.2rem
+                font-weight: 900
+                text-decoration: none
+                color: #AAA
+                font-family: 'Gelion Bold'
+                &:hover
+                    font-size: 1.6rem
+                    color: $vermelho
+    
+    .evento_chamada
+        h6
+            font-size: 1.4rem
+            font-weight: 900
+            color: $vermelho
+            span
+                display: block
+                font-size: 1rem
+                font-weight: 400
+                color: #000
+
+    table
+        tbody
+            tr
+                cursor: pointer
+                td
+                    font-size: 0.95rem
+                    padding: 0.25rem 0.25rem !important
+                    position: relative
+                    cursor: pointer
+                    &:first-child::first-letter
+                        text-transform: capitalize
+                    .thumb
+                        top: -100%
+                        right: 0
+                        border: solid 1px #000 
+                        display: none
+                        background-color: #CCC
+                        z-index: 999
+                        position: absolute
+                &:active
+                    td
+                        .thumb
+                            display: block
+
+    .news-item
+        display: table
+        padding: 0.75rem
+        margin-bottom: 0.5rem
+        background-color: #FBFBFB
+        border-bottom: solid 1px #CCC
+        font-family: 'Goldplay Regular'
+        span
+            font-size: .85rem
+        img
+            float: left
+            margin-right: 1rem
+        h5
+            font-family: 'Goldplay Bold'
+            font-size: 1.3rem
+            a
+                text-decoration: none
+                color: $azul
+                &:hover
+                    color: $purpura
+
+    #survey
+        form.wpforms-form
+            display: flex
+            .wpforms-submit-container
+                margin: auto 0.75rem
+
+    .navbar-nav
+        margin: auto 0
+        position: relative
+        li
+            display: inline-block
+            &.menu-item-has-children
+                &>a
+                    &::after
+                        content: "\f0da"
+                        font: var(--fa-font-solid)
+                        margin-left: 0.25rem
+                ul  
+                    position: absolute
+                    background-color: #CCC
+                    display: none
+                    z-index: 12000
+                    padding: 0
+                    li
+                        display: block
+                        width: 100%
+                        a
+                            font-size: 0.9rem
+                            padding: 0.1rem 0.5rem 
+                &:hover
+                    &>a
+                        &::after
+                            content: "\f0d7"
+                            font: var(--fa-font-solid)
+                            margin-left: 0.25rem
+                    &>ul
+                        display: block
+                        ul
+                            margin-top: -32px
+                            left: 220px
+            a
+                display: block
+                padding: 0.5rem 0.75rem
+                text-decoration: none
+                font-family: 'Goldplay Regular'
+                font-size: 0.9rem
+        
+        &.institucional,
+        &#principal
+            li
+                ul
+                    width: 240px
+                    background-color: #FFF
+                    a
+                        color: $azul
+                        &:hover
+                            background-color: $azul
+                            border-radius: 0
+                            color: #FFF
+                a
+                    color: #FFF
+                    &:hover
+                        background-color: #fff
+                        border-radius: 0.5rem
+                        color: $azul
+                &:last-child,
+                &:nth-child(2)
+                    &.menu-item-has-children
+                        &>a
+                            border-radius: 0.5rem 0.5rem 0 0
+                    &>ul
+                        width: 240px
+                        border-radius: 0 0.5rem 0.5rem 0.5rem
+                        box-shadow: 0 3px 4px rgba(0,0,0,0.5)
+                        li
+                            a
+                                font-size: 0.85rem
+                                line-height: 0.85rem
+                                padding: 0.3rem 0.75rem 0.2rem
+                                border-radius: 0
+                            &.menu-item-has-children
+                                &:first-child
+                                    &>a
+                                        border-radius: 0 0.5rem 0 0
+                                ul
+                                    width: 240px
+                                    left: 230px
+                                    border-radius: 0.5rem !important
+                                    box-shadow: 0 3px 4px rgba(0,0,0,0.5)
+                                    li
+                                        &:first-child
+                                            &>a
+                                                border-radius: 0.5rem 0.5rem 0 0
+                                        .sub-menu
+                                            background-color: $azulC
+                                            li
+                                                a
+                                                    color: #FFF
+                            &:last-child
+                                &>a
+                                    border-radius: 0 0 0.5rem 0.5rem
+                                    padding-bottom: 0.5rem
+        &.institucional
+            li:last-child.menu-item-has-children
+                a
+                    &:hover
+                        //border-radius: 0.5rem 0.5rem 0 0
+                .sub-menu
+                    right: 0
+                    border-radius: 0.5rem 0 0.5rem 0.5rem
+                    li.menu-item-has-children
+                        .sub-menu
+                            border-radius: 0.5rem !important
+                            box-shadow: 0 3px 4px rgba(0,0,0,0.5)
+                            li
+                                &:first-child
+                                    &>a
+                                        border-radius: 0.5rem 0.5rem 0 0
+                        &>a
+                            &::after
+                                content: ""
+                            &::before
+                                content: "\f0d9"
+                                font: var(--fa-font-solid)
+                                margin-right: 0.25rem
+                        .sub-menu
+                            left: -230px
+    .navbar
+        .nav
+            padding: 0.25rem
+            li
+                a
+                    display: block
+                    text-decoration: none
+                    color: #000
+                    padding: 0 0.5rem 
+                    border-right: solid 1px #000
+                &:last-child
+                    a
+                        border-right: 0
+
+    .nav.servicos,
+    #menu-servicos
+        list-style: none
+        display: inline-flex
+        justify-content: space-around
+        li
+            margin: 0.5rem
+            a
+                text-decoration: none
+                display: flex
+                min-width: 290px
+                border: solid 1px #FFF
+                border-radius: 0.25rem
+                padding: 1.5rem 1rem
+                color: #FFF
+                &:hover
+                    background-color: #FFF
+                    color: $purpura
+                    &::after
+                        content: "\f0a9"
+                        font: var(--fa-font-solid)
+                        margin-left: 0.25rem
+                        margin-top: 0.25rem
+            &:hover
+                box-shadow: 0 3px 5px rgba(0,0,0,0.75)
+        ul
+            width: 220px
+    #glossario
+        a.nav-link
+            font-family: 'Goldplay Regular'
+            color: #FFF
+            padding: 0.25rem 0.85rem
+            background-color: $mazul
+            margin-right: 0.15rem
+            &.active
+                background-color: #FFF
+                font-family: 'Gelion Bold'
+                color: $mazul
+    #glossarioContent
+        padding: 1rem
+        border-width: 0 1px 1px 1px
+        border-style: solid
+        border-color: #CCC
+        border-radius: 0 0 0.5rem 0.5rem
+        h6
+            font-family: 'Gelion Bold'
+            color: $vermelho
+    ul.entry-list
+        padding: 0
+        list-style: none
+        li
+            padding: 0.25rem 0.5rem
+            margin-bottom: 0.25rem
+            background-color: #ebebeb
+            a
+                color: #000
+                text-decoration: none
+                &:hover
+                    &::after
+                        content: "\f0da"
+                        font: var(--fa-font-solid)
+                        margin-left: 0.25rem
+
+    #noticias,
+    #programacao
+        padding: 2rem
+        .container
+            padding: 2rem 0
+
+    .asp_w_container_1
+        margin-bottom: 0.25rem
+    
+    footer
+        padding-bottom: 5rem
+        background-color: $mazul
+        color: #FFF
+        background-image: url(../img/patunit-full.webp)
+        background-position-y: bottom
+        background-position-x: center
+        background-repeat: no-repeat
+        background-size: 100% 70px
+        a
+            color: #fff
+        svg
+            margin-right: 0.25rem
+        .social
+            margin-left: auto
+            svg
+                width: 24px
+                height: auto
+                color: #FFF
+@media ( max-width: 1280px )
+    html, body
+        font-size: 12pt !important
+    body
+        .container
+            width: 950px
+            margin: auto
+        #pagetop,
+        #intraaccess
+            .container
+                width: 1100px
+        .banner
+            width: 610px
+        .atalhos
+            max-height: 409px
+            overflow: hidden
+@media (max-width: 430px)
+    html,body
+        width: 100vw
+        overflow-x: hidden 
+    body
+        .main
+            padding: 1rem 1rem 0 
+        .container
+            width: 100%
+            &.main
+                padding: 1.5rem 0.65rem 0 0.65rem
+        .banner
+            width: 100%
+        #topmobile
+            background-color: #EBEBEB
+            li
+                a
+                    color: #999
+                    padding: 0
+        #pagetop
+            height: auto
+            .container
+                width: 100%
+            .custom-logo-link
+                img
+                    height: 35px
+            .navbar-toggler
+                border: none
+                padding: 0
+                svg
+                    font-size: 1.8rem
+                    path
+                        fill: #FFF
+            #collapse_principal
+                position: absolute
+                z-index: 9999999999
+                background-color: #fff
+                right: -20
+                top: 50
+                left: -310
+                text-align: center
+                #mobile
+                    width: 95%
+                    max-width: 395px
+                    padding: 0
+                    margin: 0
+                    .menu-item
+                        a
+                            font-size: 1.8rem !important
+                            color: #999
+        #servicos
+            padding: 1.5rem 1rem
+        #menu-social
+            margin-left: auto
+            margin-right: auto
+            display: inline-block
+        .banner
+            height: 100%
+        div:has(> .banner)
+            padding: 1rem
+            height: 260px
+        .entry-list
+            img
+                width: 100%
+                height: auto
+        #maintop
+            height: auto
+            max-height: 100%
+            padding-bottom: 1rem
+            .col-lg-4
+                padding: 0 1rem 1rem
+
+        #noticias,
+        #programacao
+            padding: 1rem
+            background-color: #ebebeb
+            img
+                height: auto
+        #turismo_header
+            background-image: url('../img/estacao.jpg')
+            background-position: center
+            background-size: cover
+            display: flex
+            flex-direction: column
+            h1
+                font-family: "Gelion Regular" 
+                text-shadow: 0 2px 3px rgba(0,0,0,0.75)
+                color: #FFF
+                span
+                    font-family: "Alkaline Bold"
+                    font-size: 2.2rem
+            .bg-azul
+                background-color: transparent
+                #ajaxsearchpro1_1,
+                #ajaxsearchpro1_2,
+                div.asp_m.asp_m_1
+                    border-radius: 2rem
+                    background-color: rgba(255,255,255,0.8)
+                    background-image: none
+                    font-size: 0.8rem
+                    margin: 1rem auto 1rem
+                    .probox
+                        margin: 2px
+                        height: 30px
+                        .proinput
+                            color: #FFF
+                            input.orig
+                                color: #FFF
+                            input.autocomplete
+                                color: #FFF
+                    .promagnifier
+                        background-image: none
+                        path
+                            fill: #666
+
+        .main_turismo
+            height: 160px
+            .wp-block-cover
+                min-height: auto
+                border-radius: 0.5rem
+                overflow: hidden
+                margin-bottom: 0.25rem
+                padding: 0
+                width: 100%
+                .wp-block-cover__inner-container.is-layout-constrained.wp-block-cover-is-layout-constrained
+                    z-index: 6
+                    height: 100%
+                    display: flex
+                    h1,h2,h3,h4,h5,h6
+                        display: flex
+                        width: 100%
+                        height: 100%
+                        font-family: 'Gelion Bold'
+                        text-align: left
+                        line-height: 1.6rem
+                        font-size: 1.2rem !important
+                        a
+                            display: block
+                            width: 100%
+                            height: 100%
+                            padding: 5rem 1rem 3rem 1rem
+                            text-decoration: none
+                            color: #fff
+                            text-shadow: 0 2px 3px rgba(0,0,0,0.5)
+                .wp-block-cover__image-background
+                    height: 90%
+                    width: auto
+                    margin: auto
+                    z-index: 5
+                .wp-block-cover__background.has-background-dim
+                    width: 100%
+                    height: 100%
+                    z-index: 4
+                    opacity: 1
+        
+        #menu-turismo
+            padding: 0
+            li
+                display: inline-block
+                width: 50%
+                height: 60px
+                padding: 0.25rem
+                overflow: hidden
+                a
+                    display: flex
+                    background-color: #579CFF
+                    width: 100%
+                    height: 100%
+                    border-radius: 0.5rem
+                    align-items: center
+                    justify-content: center
+                    color: #fff
+                    text-decoration: none
+                    &::before
+                        font: var(--fa-font-solid)
+                        content: "\f063"
+                        display: flex
+                        width: 20px
+                        height: 20px
+                        font-size: 0.65rem
+                        border: solid 2px #660fa3
+                        margin-right: 0.25rem
+                        padding: 0.25rem
+                        border-radius: 50%
+                        rotate: 270deg
+                        color: #660fa3
+                        align-items: center
+                        justify-content: center
+                &.destino
+                    float: left
+                    height: 228px
+                    position: relative
+                    &::before
+                        position: absolute
+                        content: " "
+                        display: block
+                        left: 0.25rem
+                        right: 0.25rem
+                        height: 70%
+                        background-image: url('../img/cristo.jpg')
+                        background-size: cover
+                        background-position: center
+                        border-radius: 0.5rem
+                        overflow: hidden
+                    a
+                        background-color: #660FA3
+                        align-items: end
+                        padding-bottom: 1rem
+                        &::before
+                            border-color: #fff
+                            color: #FFF
+                &.mais_turismo
+                    height: 47px
+                    a
+                        background-color: #660FA3
+                        font-size: 0.75rem
+                        &::before
+                            border-color: #FFF
+                            color: #FFF
+        .turismo_back
+            background-color: #CCC
+            h1
+                margin: auto 1rem auto auto
+                font-family: 'Gelion Regular' 
+                font-size: 1.2rem
+                span
+                    font-family: 'Alkaline Bold'
+                    font-size: 1.5rem  
+                a
+                    color: #000
+            a.back
+                display: flex
+                align-items: center
+                justify-content: center
+                width: 45px
+                height: 45px
+                text-decoration: none
+                background-color: rgba(0,0,0,0.10)
+                color: #000
+                font-weight: 700
+                &:hover
+                    background-color: rgba(0,0,0,0.25)
+                    color: #FFF
+                    color: #FFF
+        
+        #menu-mais-informacoes
+            padding: 0
+            margin: 0
+            li
+                display: inline-block
+                padding: 0.25rem
+                width: 100%
+                height: 60px
+                overflow: hidden
+                a
+                    display: flex
+                    background-color: #579CFF
+                    width: 100%
+                    height: 100%
+                    padding: 0 0.75rem
+                    border-radius: 0.5rem
+                    align-items: center
+                    justify-content: center
+                    text-align: center
+                    color: #fff
+                    text-decoration: none
+                    font-size: 0.9rem
+                    &::before
+                        font: var(--fa-font-solid)
+                        content: "\f061"
+                        display: flex
+                        width: 18px
+                        height: 18px
+                        font-size: 0.65rem
+                        border: solid 2px #660fa3
+                        margin-right: 0.25rem
+                        padding: 0.25rem
+                        border-radius: 50%
+                        rotate: 90deg
+                        color: #660fa3
+                        align-items: center
+                        justify-content: center
+        .arquivo_destinos
+            width: 75%
+            padding: 0
+            margin: 0 auto 2rem
+            list-style: none
+            li
+                margin-bottom: 0.5rem
+                a
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    text-decoration: none
+                    color: #FFF
+                    font-family: 'Gelion Bold'
+                    font-size: 1.2rem
+                    height: 60px
+                    background-color: #579CFF
+                    border-radius: 0.5rem
+                    &::before
+                        font: var(--fa-font-solid)
+                        content: "\f061"
+                        display: flex
+                        width: 18px
+                        height: 18px
+                        font-size: 0.65rem
+                        border: solid 2px #660fa3
+                        margin-right: 0.25rem
+                        padding: 0.25rem
+                        border-radius: 50%
+                        rotate: 90deg
+                        color: #660fa3
+                        align-items: center
+                        justify-content: center
+                    &:hover
+                        text-decoration: underline
+        
+        .destaque-menu
+            ul
+                li.nav-item
+                    margin-bottom: 1rem
+                    a.nav-link
+                        svg
+                            margin-bottom: 0
+                        p
+                            color: #FFF
+                            font-size: 2rem
+                            margin: 0 1rem
+                            font-weight: 100
+                            span
+                                display: block
+                                font-weight: 400
+        footer
+            background-size: 100% 30px
+    footer
+        text-align: center
+        a
+            display: flex
+            img
+                margin: auto
+.print_preview
+    .left_menu
+        display: none
+        visibility: hidden
+    img
+        width: 100%
+        height: auto
+@media (min-width: 1400px)
+    html, body
+        font-size: 14pt
+    body
+        #maintop
+            .atalhos
+                height: 571px
+        .banner
+            height: 571px
+
+@media print
+    body
+        #intraaccess,
+        #pagetop,
+        .bg-azul,
+        .left-col,
+        button.print,
+        .main .col-lg-3,
+        footer
+            display: none
+            visibility: hidden
+
+        img
+            width: 100%
+            height: auto

@@ -1,0 +1,672 @@
+<?php
+
+// Add this to your theme's functions.php or a custom plugin
+add_action('wpforms_process_complete', 'create_qr_code_from_form_submission', 10, 4);
+
+function create_qr_code_from_form_submission($fields, $entry, $form_data, $entry_id) {
+    // RESTRICT TO SPECIFIC FORM ID - Change this to your form's ID
+    $target_form_id = 96335; // Replace with your actual form ID
+    if ($form_data['id'] != $target_form_id) {
+        return; // Exit if not the target form
+    }
+    
+    // Check if Dynamic QR Code plugin is active
+    if (!class_exists('SOSIDEE_DYNAMIC_QRCODE\SosPlugin')) {
+        error_log('Dynamic QR Code plugin not found');
+        return;
+    }
+    
+    // Get the plugin instance
+    $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+    
+    // If you have specific field IDs, use them:
+    $user_email = $fields[7]['value']; // Field ID 7 for email
+    $user_name = $fields[1]['value'];  // Field ID 1 for name - verify this is correct
+    
+    if (empty($user_email)) {
+        error_log('No email found in form submission');
+        return;
+    }
+    
+    // Create unique code for this user
+    $unique_code = 'CPDAP_' . $entry_id . '_' . time();
+    
+        // Customize the redirect URL - goes to verification page
+    $redirect_url = home_url('/qr-verify/?entry=' . $entry_id . '&code=' . $unique_code);    // Prepare QR code data - ACTIVE but requires admin verification for scans to count
+    $qr_data = [
+        'disabled' => false, // ACTIVE - users can scan but only admin scans count
+        'code' => $unique_code,
+        'description' => '[ADMIN VERIFICATION REQUIRED] QR Code for ' . $user_name . ' (Entry #' . $entry_id . ')',
+        'url_redirect' => $redirect_url,
+        'url_inactive' => '',
+        'url_expired' => '',
+        //'date_from' => null, // Start date (null = immediately active)
+        //'date_to' => null,   // End date (null = never expires)
+        //'time_from' => null,
+        //'time_to' => null,
+        
+        // EXAMPLES of date/time restrictions:
+         'date_from' => '2025-09-30 00:00:00',  // Start on Sept 30, 2025
+         'date_to' => '2025-12-31 23:59:59',    // Expire on Dec 31, 2025
+         'time_from' => '09:00:00',             // Only active from 9 AM
+         'time_to' => '17:00:00',               // Only active until 5 PM
+        'dotw' => 0, // Days of week (0 = all days)
+        'priority' => false,
+        'max_scan_tot' => 2, // 3 scans limit
+        'url_finished' => '',
+        'cypher' => '',
+        'url_cypher' => '',
+        'only_mfa' => false,
+        'device_os' => 0, // 0 = all devices
+        'device_lang' => '',
+        'img_forecolor' => '#000000',
+        'img_backcolor' => '#ffffff'
+    ];
+    
+    // Save the QR code to database
+    $qr_id = $plugin->database->saveQrCode($qr_data);
+    
+    if ($qr_id !== false) {
+        // QR code created successfully - send to user immediately
+        // Admin verification will happen when QR code is scanned
+        send_qr_code_notification($user_email, $user_name, $qr_id, $entry_id, $unique_code);
+        
+        // Notify admin that new QR code needs verification setup
+        send_admin_verification_notification($qr_id, $entry_id, $user_email, $user_name, $unique_code);
+        
+        // Log success
+        error_log("QR Code created (admin verification required): ID {$qr_id} for entry {$entry_id}");
+    } else {
+        // Log error
+        error_log("Failed to create QR code for form entry {$entry_id}");
+    }
+}
+
+// WP Mail SMTP Compatible Version
+function send_qr_code_notification($user_email, $user_name, $qr_id, $entry_id, $unique_code) {
+    // Test basic functionality first
+    wp_mail($user_email, 'QR Code Test', 'This is a test email to verify WP Mail SMTP is working.');
+    
+    // Generate QR code image file
+    $qr_attachment = generate_qr_image_file($qr_id, $unique_code);
+    
+    if (!$qr_attachment) {
+        // Fallback: send email without attachment but with download link
+        return send_qr_email_with_link($user_email, $user_name, $qr_id, $entry_id, $unique_code);
+    }
+    
+    // Use PHPMailer directly for better control with WP Mail SMTP
+    add_action('phpmailer_init', function($phpmailer) use ($qr_attachment, $unique_code) {
+        try {
+            if (file_exists($qr_attachment)) {
+                $phpmailer->addAttachment($qr_attachment, 'QR_Code_' . $unique_code . '.png', 'base64', 'image/png');
+            }
+        } catch (Exception $e) {
+            error_log('PHPMailer attachment error: ' . $e->getMessage());
+        }
+    });
+    
+    // Email subject
+    $subject = 'Sua inscrição no 1º Congresso de Proteção de Dados na Administração Pública #' . $entry_id;
+    
+    // Simpler email content for better compatibility
+    $message = '<html><body style="font-family: Arial, sans-serif;">
+        <h2>Olá, ' . esc_html($user_name) . '!</h2>
+        
+        <p>Agradecemos sua inscrição para o 1º Congresso de Proteção de Dados na Administração</p>
+        
+        <p>Your personal QR code is attached to this email as a PNG image.</p>
+        
+        <p><strong>Entry Details:</strong><br>
+        Entry ID: ' . $entry_id . '<br>
+        QR Code: ' . $unique_code . '<br>
+        Scan Limit: 3 uses</p>
+        
+        <p>Please save the attached QR code image to your phone.</p>
+        
+        <p>Best regards,<br>CPDAP Team</p>
+    </body></html>';
+    
+    // Simple headers for WP Mail SMTP compatibility
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8'
+    );
+    
+    // Send email
+    $sent = wp_mail($user_email, $subject, $message, $headers);
+    
+    // Clean up temporary file
+    if (file_exists($qr_attachment)) {
+        unlink($qr_attachment);
+    }
+    
+    return $sent;
+}
+
+// Fallback function for when attachment fails
+function send_qr_email_with_link($user_email, $user_name, $qr_id, $entry_id, $unique_code) {
+    // Save QR code image permanently and provide download link
+    $qr_image_url = save_qr_image_permanently($qr_id, $unique_code);
+    
+    if (!$qr_image_url) {
+        return false;
+    }
+    
+    $subject = 'Sua inscrição no 1º Congresso de Proteção de Dados na Administração Pública - #' . $entry_id;
+    
+    $message = '<html><body style="font-family: Arial, sans-serif;">
+        <h2>Olá, ' . esc_html($user_name) . '!</h2>
+        
+        <p>Agradecemos sua inscrição no 1º Congresso de Proteção de Dados na Administração Pública!</p>
+        
+        <p>Seu código QR de acesso está pronto.</p>
+        <p><img src="'.$qr_image_url.'"></p>
+
+        <p>Para baixar a imagem, clique no link abaixo.</p>
+        
+        <p><a href="' . $qr_image_url . '" style="background: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Download Your QR Code</a></p>
+        
+        <p>Ou copie este link: ' . $qr_image_url . '</p>
+        
+        <p><strong>Detalhes da sua inscrição:</strong><br>
+        ID da inscrição: ' . $entry_id . '<br>
+        Nome: ' . esc_html($user_name) . '<br>
+        </p>
+        
+        <p>Nos vemos em novembro!</p>
+        <p>Atenciosamente,<br>Prefeitura de Itabirito</p>
+    </body></html>';
+    
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    
+    return wp_mail($user_email, $subject, $message, $headers);
+}
+
+function save_qr_image_permanently($qr_id, $unique_code) {
+    try {
+        // Get plugin instance
+        $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+        
+        // Load QR code from database
+        $qrcode = $plugin->database->loadQrCode($qr_id);
+        if (!$qrcode) {
+            return false;
+        }
+        
+        // Get the API URL
+        $api_url = $plugin->getApiUrl($qrcode->code, false);
+        
+        // Generate QR code
+        $fore_color = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getColor('#000000');
+        $back_color = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getColor('#ffffff');
+        $base64_data = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getString($api_url, 300, 4, $fore_color, $back_color);
+        
+        if (!$base64_data) {
+            return false;
+        }
+        
+        // Save permanently in uploads
+        $upload_dir = wp_upload_dir();
+        $filename = 'qr_code_' . $unique_code . '.png';
+        $filepath = $upload_dir['path'] . '/' . $filename;
+        $fileurl = $upload_dir['url'] . '/' . $filename;
+        
+        // Save file
+        $binary_data = base64_decode($base64_data);
+        file_put_contents($filepath, $binary_data);
+        
+        return $fileurl;
+        
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function generate_qr_image_file($qr_id, $unique_code) {
+    try {
+        error_log("Generating QR image for ID: {$qr_id}");
+        
+        // Get plugin instance
+        $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+        
+        // Load QR code from database
+        $qrcode = $plugin->database->loadQrCode($qr_id);
+        if (!$qrcode) {
+            error_log("Could not load QR code from database: {$qr_id}");
+            return false;
+        }
+        
+        error_log("Loaded QR code data: " . print_r($qrcode, true));
+        
+        // Get the API URL that the QR code will contain
+        $api_url = $plugin->getApiUrl($qrcode->code, false);
+        error_log("API URL for QR: {$api_url}");
+        
+        // QR code settings
+        $size = 300;  // Larger size for better quality
+        $padding = 4;
+        
+        // Generate QR code using plugin's method
+        $fore_color = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getColor('#000000');
+        $back_color = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getColor('#ffffff');
+        
+        // This generates base64 encoded PNG data
+        $base64_data = SOSIDEE_DYNAMIC_QRCODE\SRC\QrCode::getString($api_url, $size, $padding, $fore_color, $back_color);
+        
+        if (!$base64_data) {
+            error_log("Failed to generate QR code base64 data");
+            return false;
+        }
+        
+        error_log("Generated base64 data length: " . strlen($base64_data));
+        
+        // Create temp file
+        $upload_dir = wp_upload_dir();
+        if (!$upload_dir || isset($upload_dir['error'])) {
+            error_log("Could not get upload directory");
+            return false;
+        }
+        
+        $filename = 'qr_' . $unique_code . '_' . time() . '.png';
+        $filepath = $upload_dir['path'] . '/' . $filename;
+        
+        // Convert base64 to binary and save
+        $binary_data = base64_decode($base64_data);
+        $bytes_written = file_put_contents($filepath, $binary_data);
+        
+        if ($bytes_written === false) {
+            error_log("Failed to write QR image file: {$filepath}");
+            return false;
+        }
+        
+        error_log("QR image saved: {$filepath} ({$bytes_written} bytes)");
+        
+        // Verify file exists and has content
+        if (!file_exists($filepath) || filesize($filepath) == 0) {
+            error_log("QR image file verification failed");
+            return false;
+        }
+        
+        return $filepath;
+        
+    } catch (Exception $e) {
+        error_log("Exception in generate_qr_image_file: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Admin notification about new QR code that needs verification capability
+function send_admin_verification_notification($qr_id, $entry_id, $user_email, $user_name, $unique_code) {
+    $admin_email = get_option('admin_email');
+    $subject = 'Novo código QR criado - Verificação pelo administrador necessária - Inscrição #' . $entry_id;
+    
+    $verify_url = home_url('/qr-admin-verify/?entry=' . $entry_id . '&code=' . $unique_code . '&admin_key=' . wp_create_nonce('admin_verify_' . $qr_id));
+    
+    $message = '<html><body style="font-family: Arial, sans-serif;">
+        <h2>Novo código QR criado - Verificação pelo administrador necessária - Inscrição #' . $entry_id .'</h2>
+        
+        <p>Um novo código QR foi criado e requer <strong>verificação do administrador</strong>:</p>
+        
+        <p><strong>Detalhes:</strong><br>
+        Nome: ' . esc_html($user_name) . '<br>
+        Email: ' . esc_html($user_email) . '<br>
+        ID da inscrição: ' . $entry_id . '<br>
+        </p>
+        
+        <p><strong>Como funciona:</strong></p>
+        <ul>
+            <li>O inscrito recebeu um código QR e pode escaneá-lo</li>
+            <li><strong>MAS:</strong>Scans só conta quando é verificado por um administrador</li>
+            <li>Quando escaneado, o inscrito vê uma página de verificação</li>
+            <li>Você deve verificar a presença dele e registrá-la</li>
+        </ul>
+        
+        <p><strong>URL de verificação do administrador:</strong><br>
+        <a href="' . $verify_url . '" style="background: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Página para a verificação de presença</a></p>
+        
+        <p>Salve esta página para verificar a presença dos inscritos durante o evento</p>
+        
+        <p><small>Os códigos QR estão ativos para o scan requer sua verificação para validar os certificados.</small></p>
+    </body></html>';
+    
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    
+    wp_mail($admin_email, $subject, $message, $headers);
+}
+
+// Admin approval notification with action links (kept for compatibility)
+function send_admin_approval_notification($qr_id, $entry_id, $user_email, $user_name, $unique_code) {
+    $admin_email = get_option('admin_email');
+    $subject = 'QR Code Approval Required - Entry #' . $entry_id;
+    
+    // Create approval and rejection URLs
+    $approve_url = admin_url('admin.php?page=dynamic-qr-code&action=approve_qr&qr_id=' . $qr_id . '&entry_id=' . $entry_id . '&nonce=' . wp_create_nonce('approve_qr_' . $qr_id));
+    $reject_url = admin_url('admin.php?page=dynamic-qr-code&action=reject_qr&qr_id=' . $qr_id . '&entry_id=' . $entry_id . '&nonce=' . wp_create_nonce('reject_qr_' . $qr_id));
+    
+    $message = '<html><body style="font-family: Arial, sans-serif;">
+        <h2>QR Code Approval Required</h2>
+        
+        <p>A new QR code has been generated and requires your approval:</p>
+        
+        <p><strong>Details:</strong><br>
+        User: ' . esc_html($user_name) . '<br>
+        Email: ' . esc_html($user_email) . '<br>
+        Entry ID: ' . $entry_id . '<br>
+        QR Code ID: ' . $qr_id . '<br>
+        Unique Code: ' . $unique_code . '</p>
+        
+        <p><strong>Actions:</strong></p>
+        <p>
+            <a href="' . $approve_url . '" style="background: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">✓ APPROVE QR CODE</a>
+            <a href="' . $reject_url . '" style="background: #dc3232; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">✗ REJECT QR CODE</a>
+        </p>
+        
+        <p>You can also manage this QR code in the <a href="' . admin_url('admin.php?page=sos-dynamic-qr-code-qrcodes') . '">WordPress admin panel</a>.</p>
+        
+        <p><small>QR Code will remain disabled until approved.</small></p>
+    </body></html>';
+    
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    
+    wp_mail($admin_email, $subject, $message, $headers);
+}
+
+// User notification that QR code is pending approval
+function send_pending_notification($user_email, $user_name, $entry_id) {
+    $subject = 'QR Code Pending Approval - CPDAP Entry #' . $entry_id;
+    
+    $message = '<html><body style="font-family: Arial, sans-serif;">
+        <h2>Hello ' . esc_html($user_name) . ',</h2>
+        
+        <p>Thank you for your submission to CPDAP!</p>
+        
+        <p>Your QR code has been generated but is currently <strong>pending admin approval</strong> for security purposes.</p>
+        
+        <p><strong>What happens next:</strong></p>
+        <ul>
+            <li>Our admin team will review your request</li>
+            <li>You will receive another email once your QR code is approved</li>
+            <li>Your QR code will then be active and ready to use</li>
+        </ul>
+        
+        <p><strong>Entry Details:</strong><br>
+        Entry ID: ' . $entry_id . '</p>
+        
+        <p>Thank you for your patience!</p>
+        
+        <p>Best regards,<br>CPDAP Team</p>
+    </body></html>';
+    
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    
+    wp_mail($user_email, $subject, $message, $headers);
+}
+
+// Handle admin approval/rejection actions
+add_action('admin_init', 'handle_qr_approval_actions');
+
+function handle_qr_approval_actions() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    $action = $_GET['action'] ?? '';
+    $qr_id = intval($_GET['qr_id'] ?? 0);
+    $entry_id = intval($_GET['entry_id'] ?? 0);
+    $nonce = $_GET['nonce'] ?? '';
+    
+    if ($action === 'approve_qr' && $qr_id > 0) {
+        if (wp_verify_nonce($nonce, 'approve_qr_' . $qr_id)) {
+            approve_qr_code($qr_id, $entry_id);
+            wp_redirect(admin_url('admin.php?page=sos-dynamic-qr-code-qrcodes&message=approved'));
+            exit;
+        }
+    } elseif ($action === 'reject_qr' && $qr_id > 0) {
+        if (wp_verify_nonce($nonce, 'reject_qr_' . $qr_id)) {
+            reject_qr_code($qr_id, $entry_id);
+            wp_redirect(admin_url('admin.php?page=sos-dynamic-qr-code-qrcodes&message=rejected'));
+            exit;
+        }
+    }
+}
+
+function approve_qr_code($qr_id, $entry_id) {
+    $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+    
+    // Load QR code data
+    $qrcode = $plugin->database->loadQrCode($qr_id);
+    if (!$qrcode) {
+        return false;
+    }
+    
+    // Enable the QR code
+    $update_data = [
+        'disabled' => false,
+        'description' => str_replace('[PENDING APPROVAL] ', '[APPROVED] ', $qrcode->description)
+    ];
+    
+    $result = $plugin->database->saveQrCode($update_data, $qr_id);
+    
+    if ($result !== false) {
+        // Extract user details from description (basic approach)
+        preg_match('/QR Code for (.+?) \(Entry #(\d+)\)/', $qrcode->description, $matches);
+        $user_name = $matches[1] ?? 'User';
+        
+        // You might want to store user email in QR code data for better retrieval
+        // For now, we'll skip sending approval email to user
+        // send_approval_confirmation($user_email, $user_name, $qr_id, $entry_id, $qrcode->code);
+        
+        error_log("QR Code approved: ID {$qr_id} for entry {$entry_id}");
+        return true;
+    }
+    
+    return false;
+}
+
+function reject_qr_code($qr_id, $entry_id) {
+    $plugin = SOSIDEE_DYNAMIC_QRCODE\SosPlugin::instance();
+    
+    // Delete/cancel the QR code
+    $result = $plugin->database->deleteQrCode($qr_id);
+    
+    if ($result !== false) {
+        error_log("QR Code rejected and deleted: ID {$qr_id} for entry {$entry_id}");
+        return true;
+    }
+    
+    return false;
+}
+
+// Create verification pages
+add_action('init', 'create_qr_verification_pages');
+
+function create_qr_verification_pages() {
+    // Add rewrite rules for our custom verification pages
+    add_rewrite_rule(
+        '^qr-verify/?$',
+        'index.php?qr_verify=1',
+        'top'
+    );
+    
+    add_rewrite_rule(
+        '^qr-admin-verify/?$', 
+        'index.php?qr_admin_verify=1',
+        'top'
+    );
+    
+    // Add query vars
+    add_filter('query_vars', function($vars) {
+        $vars[] = 'qr_verify';
+        $vars[] = 'qr_admin_verify';
+        return $vars;
+    });
+}
+
+// Handle the verification pages
+add_action('template_redirect', 'handle_qr_verification_pages');
+
+function handle_qr_verification_pages() {
+    global $wp_query;
+    
+    if (get_query_var('qr_verify')) {
+        show_qr_verification_page();
+        exit;
+    }
+    
+    if (get_query_var('qr_admin_verify')) {
+        show_admin_verification_page();
+        exit;
+    }
+}
+
+function show_qr_verification_page() {
+    $entry_id = sanitize_text_field($_GET['entry'] ?? '');
+    $code = sanitize_text_field($_GET['code'] ?? '');
+    
+    // Check if this scan has been admin-verified
+    $verified = check_admin_verification($entry_id, $code);
+    
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>QR Code Verification - CPDAP</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }
+            .success { color: #0f5132; background: #d1e7dd; padding: 20px; border-radius: 5px; margin: 20px 0; }
+            .pending { color: #664d03; background: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0; }
+            .error { color: #842029; background: #f8d7da; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <h1>CPDAP QR Code Verification</h1>
+        
+        <?php if ($verified): ?>
+            <div class="success">
+                <h2>✅ Attendance Verified!</h2>
+                <p>Your attendance has been confirmed by an administrator.</p>
+                <p><strong>Entry ID:</strong> <?php echo esc_html($entry_id); ?></p>
+                <p>You are eligible for your certificate.</p>
+            </div>
+        <?php else: ?>
+            <div class="pending">
+                <h2>⏳ Verification Pending</h2>
+                <p>Your QR code scan has been recorded, but attendance verification is still pending.</p>
+                <p><strong>Entry ID:</strong> <?php echo esc_html($entry_id); ?></p>
+                <p><strong>What this means:</strong></p>
+                <ul style="text-align: left;">
+                    <li>You have successfully scanned your QR code</li>
+                    <li>An administrator needs to verify your physical attendance</li>
+                    <li>This prevents fraudulent certificate claims</li>
+                    <li>Please wait for admin verification at the event</li>
+                </ul>
+                <p><em>Refresh this page after admin verification to see updated status.</em></p>
+            </div>
+        <?php endif; ?>
+        
+        <p><small>CPDAP - Certificate Program with Digital Attendance Protection</small></p>
+    </body>
+    </html>
+    <?php
+}
+
+function show_admin_verification_page() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized access.');
+    }
+    
+    $entry_id = sanitize_text_field($_GET['entry'] ?? '');
+    $code = sanitize_text_field($_GET['code'] ?? '');
+    $admin_key = sanitize_text_field($_GET['admin_key'] ?? '');
+    
+    // Handle verification action
+    if ($_POST['action'] === 'verify_attendance' && wp_verify_nonce($_POST['nonce'], 'verify_' . $entry_id)) {
+        $result = mark_attendance_verified($entry_id, $code);
+        $message = $result ? 'Attendance verified successfully!' : 'Error verifying attendance.';
+    }
+    
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Admin Verification - CPDAP</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+            .verify-btn { background: #0073aa; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+            .verify-btn:hover { background: #005a87; }
+            .info-box { background: #f0f0f1; padding: 20px; border-radius: 5px; margin: 20px 0; }
+            .success { color: #0f5132; background: #d1e7dd; padding: 15px; border-radius: 5px; }
+            .error { color: #842029; background: #f8d7da; padding: 15px; border-radius: 5px; }
+        </style>
+    </head>
+    <body>
+        <h1>🛡️ Admin Verification Panel</h1>
+        
+        <?php if (isset($message)): ?>
+            <div class="<?php echo $result ? 'success' : 'error'; ?>">
+                <?php echo esc_html($message); ?>
+            </div>
+        <?php endif; ?>
+        
+        <div class="info-box">
+            <h3>Attendance Verification Request</h3>
+            <p><strong>Entry ID:</strong> <?php echo esc_html($entry_id); ?></p>
+            <p><strong>QR Code:</strong> <?php echo esc_html($code); ?></p>
+            <p><strong>Status:</strong> <?php echo check_admin_verification($entry_id, $code) ? 'Already Verified ✅' : 'Pending Verification ⏳'; ?></p>
+        </div>
+        
+        <?php if (!check_admin_verification($entry_id, $code)): ?>
+            <form method="post">
+                <input type="hidden" name="action" value="verify_attendance">
+                <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('verify_' . $entry_id); ?>">
+                
+                <h3>Verify Physical Attendance</h3>
+                <p>Only click this button if the person is physically present at the event:</p>
+                
+                <button type="submit" class="verify-btn" onclick="return confirm('Confirm that this person is physically present at the event?')">
+                    ✅ VERIFY ATTENDANCE
+                </button>
+            </form>
+        <?php else: ?>
+            <div class="success">
+                <h3>✅ Already Verified</h3>
+                <p>This attendance has already been verified by an administrator.</p>
+            </div>
+        <?php endif; ?>
+        
+        <hr>
+        <p><small>CPDAP Admin Panel - Use this to verify physical attendance and prevent fraudulent certificate claims.</small></p>
+    </body>
+    </html>
+    <?php
+}
+
+function check_admin_verification($entry_id, $code) {
+    // Check WordPress options table for verification status
+    $verification_key = 'cpdap_verified_' . $entry_id . '_' . md5($code);
+    return get_option($verification_key, false);
+}
+
+function mark_attendance_verified($entry_id, $code) {
+    // Store verification in WordPress options table
+    $verification_key = 'cpdap_verified_' . $entry_id . '_' . md5($code);
+    return update_option($verification_key, array(
+        'verified_at' => current_time('mysql'),
+        'verified_by' => get_current_user_id(),
+        'entry_id' => $entry_id,
+        'code' => $code
+    ));
+}
+
+// Flush rewrite rules on activation (add this to your theme's functions.php)
+add_action('after_switch_theme', 'flush_rewrite_rules');
+
+// Optional: Old admin notification function (kept for compatibility)
+function send_admin_qr_notification($qr_id, $entry_id, $user_email) {
+    // This function is now replaced by send_admin_verification_notification
+    // Kept for backward compatibility if called elsewhere
+}
+
+?>
