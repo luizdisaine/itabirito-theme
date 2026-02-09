@@ -517,7 +517,7 @@ function pmi_ponto_register() {
         'supports' => array( 'title', 'editor', 'thumbnail','author')  
     );    
 register_post_type( 'ponto-turistico' , $args );
-register_taxonomy("categoria-atracao", array("ponto-turistico"), array("hierarchical" => true, "label" => "Categorias de atração", "singular_label" => "Categoria", "rewrite" => true));
+register_taxonomy("categoria-atracao", array("ponto-turistico"), array("hierarchical" => true, "show_ui" => true, "show_in_rest" => true, "show_admin_column" => true, "label" => "Categorias de atração", "singular_label" => "Categoria", "rewrite" => true));
 
 }
 
@@ -920,8 +920,8 @@ function pmi_servico_register() {
         'supports' => array( 'title', 'editor', 'thumbnail','author','page-attributes')  
     );    
 register_post_type( 'servico' , $args );
-register_taxonomy("grupo", array("servico"), array("hierarchical" => true, "label" => "Grupo", "singular_label" => "grupo", "rewrite" => true));
-register_taxonomy("tema", array("servico"), array("hierarchical" => true, "label" => "Tema", "singular_label" => "tema", "rewrite" => true));
+register_taxonomy("grupo", array("servico"), array("hierarchical" => true, "show_ui" => true, "show_in_rest" => true, "show_admin_column" => true, "label" => "Grupo", "singular_label" => "grupo", "rewrite" => true));
+register_taxonomy("tema", array("servico"), array("hierarchical" => true, "show_ui" => true, "show_in_rest" => true, "show_admin_column" => true, "label" => "Tema", "singular_label" => "tema", "rewrite" => true));
 }
 
 add_action('init', 'pmi_servico_register');

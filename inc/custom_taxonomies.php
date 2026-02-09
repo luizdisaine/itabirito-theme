@@ -9,6 +9,7 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'modalidades-contas' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
     );
 
     register_taxonomy( 'modalidades-contas', 'conta', $args );
@@ -69,6 +70,7 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'categoria_programacao' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'categoria_programacao', 'programacao', $args );
@@ -79,6 +81,8 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'categoria' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'categoria', 'noticia', $args );
@@ -89,6 +93,8 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'tipo_selecao' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'tipo_selecao', 'selecao', $args );

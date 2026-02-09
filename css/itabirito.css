@@ -579,13 +579,13 @@ body .main .left_menu li,
 body .main .left_menu ul li {
   font-weight: 900;
   line-height: 1.2rem;
-  margin-bottom: 0.35rem;
 }
 body .main .left_menu li a,
 body .main .left_menu ul li a {
   font-size: 1.2rem;
   text-decoration: none;
   color: #BBB;
+  padding: 0.25rem 0.35rem;
 }
 body .main .left_menu li a::before,
 body .main .left_menu ul li a::before {
@@ -625,9 +625,9 @@ body .main .parent .parent_menu {
   display: none;
   font-size: 0.85rem;
   background-color: #FFF;
+  z-index: 999;
 }
 body .main .parent .parent_menu a {
-  margin-top: 0.5rem;
   font-family: "Goldplay Regular";
   font-size: 1rem;
   font-weight: 100;

@@ -68,10 +68,10 @@ function the_breadcrumb() {
     if (is_singular() OR is_page()) {
         $title = '<h3 class="single-title">'.$post_title.'</h3>';            
         if ( $parents ) {
-            foreach ($parents as $post) {
-                $crlink = '<a href="'.get_permalink().'" class="upper">'.get_the_title().'</a>';
-                wp_reset_postdata();
+            foreach ($parents as $parent_post) {
+                $crlink .= '<a href="'.get_permalink($parent_post).'" class="upper">'.get_the_title($parent_post).'</a>'.$sep;
             }
+            $crlink = preg_replace('/'.preg_quote($sep, '/').'$/', "", $crlink, 1);
         } else {
             $crlink = '<a class="upper bread-custom-post-type-' . $post_type . '" href="'.$post_type_archive.'" title="'. $post_type_object->labels->name.'">'.$post_type_object->labels->name.'</a>';
         }
