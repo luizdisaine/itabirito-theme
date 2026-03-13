@@ -121,6 +121,7 @@ require_once( __DIR__ . '/inc/forms/rh.php');
 require_once( __DIR__ . '/inc/forms/saude.php');
 require_once( __DIR__ . '/inc/forms/cultura.php');
 require_once( __DIR__ . '/inc/forms/meio.php');
+require_once( __DIR__ . '/inc/check_update.php');
 
 
 

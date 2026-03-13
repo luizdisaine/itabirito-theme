@@ -37,7 +37,12 @@
                 'post_type'=>array('ponto-turistico'),
                 'posts_per_page'=>'5',
                 'orderby'=> 'rand',
-                //'order'=>'RAND'
+                'meta_query' => array(
+                    array(
+                        'key' => '_thumbnail_id',
+                        'compare' => 'EXISTS'
+                    )
+                )
             );
 
             $query = new WP_Query($args);

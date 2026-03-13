@@ -17,14 +17,14 @@
         <?php } ?>
 
             <div class="col-lg-9 ms-auto">
-            <div class="row">
-                
-            <?php
-            $archive_ponto_link = get_post_type_archive_link('ponto-turistico');
-            $archive_atracao_link = get_post_type_archive_link('atracao');
-            echo '<ul class="arquivo_destinos"><li><a href="'.$archive_ponto_link.'">'.__('Pontos Turísticos','pmi').'</a></li><li><a href="'.$archive_atracao_link.'">'.__('Atrações Naturais','pmi').'</a></li></ul>';
-            ?>
-            </div>
+                <div class="row">
+                    
+                <?php
+                $archive_ponto_link = get_page_by_path('descubra-itabirito/onde-ir/pontos-turisticos');
+                $archive_atracao_link = get_page_by_path('descubra-itabirito/onde-ir/atracoes-naturais');
+                echo '<ul class="arquivo_destinos"><li><a href="'.get_permalink( $archive_ponto_link->ID ).'">'.__('Pontos Turísticos','pmi').'</a></li><li><a href="'.get_permalink( $archive_atracao_link->ID ).'">'.__('Atrações Naturais','pmi').'</a></li></ul>';
+                ?>
+                </div>
             </div>
         </div>
     </div>
