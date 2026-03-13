@@ -8,13 +8,14 @@ function thesidebar() {
     $descubra = ['restaurante', 'agencia', 'hospedagem'];
     $turismo = ['roteiro', 'ponto-turistico', 'atracao'];
     $servico = ['associacao', 'escola', 'telefone-util', 'cooperativa'];
-    $prefeitura = ['secretaria', 'conselho', 'plano', 'oficio', 'selecao', 'glossario'];
+    $prefeitura = ['secretaria', 'conselho', 'plano', 'selecao', 'glossario','oficio'];
     $noticia = ['noticia'];
     $diferencial = ['diferencial'];
 
     $obj_id = get_queried_object_id();
     $current_url = get_permalink( $obj_id );
     
+    // Lista terms in categoria para o tipo de post noticia
     if (is_post_type_archive('noticia') || is_singular('noticia') || is_tax( 'categoria' )) {
         $terms = get_terms( 'categoria' ); 
         
@@ -31,7 +32,8 @@ function thesidebar() {
             echo $term_list;
 
         }
-
+    
+    // Lista terms em categoria_programacao para o tipo de post programacao
     } elseif (is_post_type_archive('programacao') || is_singular('programacao') || is_tax( 'categoria_programacao' )) { 
         $args = array( 'hide_empty=0' );
         
@@ -46,10 +48,10 @@ function thesidebar() {
             $term_list .= '</ul>';
             echo $term_list;
 
-    } ?>
-
+        }
     
-    <?php } elseif (is_singular($prefeitura) OR is_page()) {
+    
+    } elseif (is_singular($prefeitura) OR is_page()) {
 
         $parent = get_field('parent_secretaria');
         if ($parent) {
@@ -66,6 +68,12 @@ function thesidebar() {
                 'post_type' => array('page', 'oficio', 'conselho'),
                 'numberposts' => -1,
                 'meta_query' => array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'conteudo_secretaria',
+                        'value' => '1',
+                        'compare' => 'LIKE',
+                    ),
                     array(
                         'key' => 'nome_secretaria',
                         'value' => '"'.$post->ID.'"',
@@ -88,22 +96,23 @@ function thesidebar() {
         $ancestor = get_post_ancestors( $post->ID );
         $ancestorPT = get_post_type_object(get_post_type($post))->name;
         if($post->post_parent) {
+            $top_ancestor = !empty($ancestor) ? end($ancestor) : $post->ID;
             $listargs = array(
-                'child_of' => $ancestor[0], // Only pages that are children of the current page
-                'depth' => 1 ,   // Only show one level of hierarchy
-                'sort_order' => 'asc',
-                'title_li'    => '',
-                'post_type' => $ancestorPT
+            'child_of' => $top_ancestor, // Only pages that are children of the top-level ancestor
+            'depth' => 1 ,   // Only show one level of hierarchy
+            'sort_order' => 'asc',
+            'title_li'    => '',
+            'post_type' => $ancestorPT
             );
-            echo '<h6 class="parent"><i class="fa-solid fa-circle-left me-1"></i><a href='.get_permalink( $ancestor[0] ).'>'.get_the_title($ancestor[0]).'</a><ul class="parent_menu">';
+            echo '<h6 class="parent"><i class="fa-solid fa-circle-left me-1"></i><a href="'.get_permalink( $top_ancestor ).'">'.get_the_title($top_ancestor).'</a><ul class="parent_menu">';
             wp_list_pages($listargs);
             echo '</ul></h6>';
             wp_list_pages( array(
-                'child_of' => $post->ID, // Only pages that are children of the current page
-                'depth' => 1 ,   // Only show one level of hierarchy
-                'sort_order' => 'asc',
-                'title_li'    => '',
-                'post_type' => $ancestorPT
+            'child_of' => $post->ID, // Only pages that are children of the current page
+            'depth' => 1 ,   // Only show one level of hierarchy
+            'sort_order' => 'asc',
+            'title_li'    => '',
+            'post_type' => $ancestorPT
             ));
         } else {
         wp_list_pages( array(
@@ -138,8 +147,8 @@ function thesidebar() {
                 wp_reset_postdata();
             ?>
             </ul>
-            <?php endif; ?>
-    <?php } elseif (is_post_type_archive($descubra) || is_post_type_archive( $turismo) || is_singular($turismo)) { 
+            <?php endif;
+    } elseif (is_post_type_archive($descubra) || is_post_type_archive( $turismo) || is_singular($turismo)) { 
         if (is_post_type_archive($turismo)) { ?>
         <ul class="left_menu">
             <?php while (have_posts()) { the_post();
@@ -173,8 +182,11 @@ function thesidebar() {
             'exclude' => '1520, 1521, 1743, 1748, 1753, 1784, 1789, 1823, 2020, 2131'
         )); ?>
         </ul>
-    <?php } elseif (is_post_type_archive( $prefeitura ) || is_singular('oficio') || is_tax('tipo_selecao') || is_singular('selecao') ) { ?>
-
+    <?php } elseif (is_post_type_archive( $prefeitura ) || is_singular('oficio') || is_tax('tipo_selecao') || is_singular('selecao') ) { 
+        if (is_post_type_archive( 'oficio' ) OR is_singular('oficio')) {
+            echo do_shortcode('[wpdreams_ajaxsearchpro id=2]');
+        }
+        ?>
         <ul class="left_menu">
         <?php wp_list_pages( array(
             'child_of' => (get_page_by_path( 'a-prefeitura')->ID), // Only pages that are children of the current page
@@ -188,7 +200,7 @@ function thesidebar() {
         <div class="text-end ms-auto">
         <h5><?php _e('Você já usou esse serviço?','pmi'); ?></h5>
     <?php echo do_shortcode( '[wpforms id="85960"]' ).'</div>';
-} elseif (is_page_template( 'taxonomy-tipo_selecao.php' ) && !is_page('trabalhe-conosco'))  { ?>
+    } elseif (is_page_template( 'taxonomy-tipo_selecao.php' ) && !is_page('trabalhe-conosco'))  { ?>
         <h6 class="subarea_title"><?php echo wp_title(''); ?></h6>
         <?php 
         global $post;
@@ -255,4 +267,6 @@ function thesidebar() {
             </ul>
         <?php  } else { ?>
             <h5 class="area_title"><?php the_title(); ?></h5>
-        <?php } } } ?>
+        <?php } 
+    } 
+} ?>

@@ -9,8 +9,8 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'modalidades-contas' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
     );
-
     register_taxonomy( 'modalidades-contas', 'conta', $args );
 
     /* Cria tipos de contas */
@@ -69,6 +69,7 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'categoria_programacao' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'categoria_programacao', 'programacao', $args );
@@ -79,19 +80,90 @@ function create_tax() {
         'rewrite' => array( 'slug' => 'categoria' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'categoria', 'noticia', $args );
 
-     /* Cria tipos de seleção */
+    /* Cria tipos de seleção */
      $args = array(
         'label' => __( 'Tipo de seleção' ),
         'rewrite' => array( 'slug' => 'tipo_selecao' ),
         'hierarchical' => true,
         'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
     );
 
     register_taxonomy( 'tipo_selecao', 'selecao', $args );
 
-}
-?>
+    /* Cria grupos de serviços */
+     $args = array(
+        'label' => __( 'Grupo' ),
+        'rewrite' => array( 'slug' => 'grupo' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+
+    register_taxonomy( 'grupo', 'servico', $args );
+
+    /* Cria grupos de serviços */
+     $args = array(
+        'label' => __( 'Tema' ),
+        'rewrite' => array( 'slug' => 'tema' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+
+    register_taxonomy( 'tema', 'servico', $args );
+
+    //Cria áreas de interesse para hotsites
+    $args = array(
+        'label' => __( 'Áreas de interesse' ),
+        'rewrite' => array( 'slug' => 'area-interesse' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+    register_taxonomy('area-interesse', 'hotsite', $args);
+
+    //Cria categorias de atrações para pontos turísticos
+    $args = array(
+        'label' => __( 'Categorias de atração' ),
+        'rewrite' => array( 'slug' => 'categoria-atracao' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+    register_taxonomy('categoria-atracao', 'ponto-turistico', $args);
+
+    //Cria tipos de telefone uteis
+    $args = array(
+        'label' => __( 'Tipos de telefone' ),
+        'rewrite' => array( 'slug' => 'tipo-telefone' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+    register_taxonomy('tipo-telefone', 'telefone-util', $args);
+
+    //Cria categorias de oficio
+    $args = array(
+        'label' => __( 'Categorias de ofícios' ),
+        'rewrite' => array( 'slug' => 'categoria-oficio' ),
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+    );
+    register_taxonomy('categoria-oficio', 'oficio', $args);
+
+} ?>

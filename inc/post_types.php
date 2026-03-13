@@ -72,7 +72,7 @@ function pmi_glossario_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-format-aside',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor','author')  
+        'supports' => array( 'title', 'editor')  
        );    
 register_post_type( 'glossario' , $args );
 }
@@ -113,7 +113,7 @@ function pmi_plano_register() {
         'menu_icon' => 'dashicons-media-document',
 		'has_archive' => true,
 		'taxonomies'  => array( 'category' ),
-        'supports' => array( 'title', 'editor','author')  
+        'supports' => array( 'title', 'editor')  
     );    
 register_post_type( 'plano' , $args );
 }
@@ -194,7 +194,7 @@ function pmi_banner_register() {
 		'menu_position' => 5,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
     );    
 register_post_type( 'banner' , $args );
 }
@@ -274,7 +274,7 @@ function pmi_secretaria_register() {
 		'menu_position' => 20,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor','author')  
+        'supports' => array( 'title', 'editor')  
     );    
 register_post_type( 'secretaria' , $args );
 }
@@ -354,7 +354,7 @@ function pmi_agencia_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
        );    
 register_post_type( 'agencia' , $args );
 }
@@ -394,7 +394,7 @@ function pmi_restaurante_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
     );    
 register_post_type( 'restaurante' , $args );
 }
@@ -434,7 +434,7 @@ function pmi_hospedagem_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
        );    
 register_post_type( 'hospedagem' , $args );
 }
@@ -474,7 +474,7 @@ function pmi_atracao_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor', 'thumbnail','author')  
+        'supports' => array( 'title', 'editor', 'thumbnail')  
     );    
 register_post_type( 'atracao' , $args );
 }
@@ -514,11 +514,9 @@ function pmi_ponto_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor', 'thumbnail','author')  
+        'supports' => array( 'title', 'editor', 'thumbnail')  
     );    
 register_post_type( 'ponto-turistico' , $args );
-register_taxonomy("categoria-atracao", array("ponto-turistico"), array("hierarchical" => true, "label" => "Categorias de atração", "singular_label" => "Categoria", "rewrite" => true));
-
 }
 
 add_action('init', 'pmi_ponto_register');
@@ -556,7 +554,7 @@ function pmi_roteiro_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor', 'thumbnail','author')  
+        'supports' => array( 'title', 'editor', 'thumbnail')  
     );    
 register_post_type( 'roteiro' , $args );
 }
@@ -596,7 +594,7 @@ function pmi_diferencial_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title', 'editor','author')  
+        'supports' => array( 'title', 'editor')  
     );    
 register_post_type( 'diferencial' , $args );
 }
@@ -636,7 +634,7 @@ function pmi_telefones_uteis_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
     );    
 register_post_type( 'telefone-util' , $args );
 }
@@ -676,7 +674,7 @@ function pmi_escola_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
     );    
 register_post_type( 'escola' , $args );
 }
@@ -716,7 +714,7 @@ function pmi_associacao_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')  
+        'supports' => array( 'title')  
     );    
 register_post_type( 'associacao' , $args );
 }
@@ -756,7 +754,7 @@ function pmi_ubs_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array( 'title','author')
+        'supports' => array( 'title')
     );    
 register_post_type( 'unidade-saude' , $args );
 }
@@ -796,7 +794,7 @@ function pmi_coop_register() {
 		'menu_position' => 25,
         'menu_icon' => 'dashicons-images-alt2',
 		'has_archive' => true,
-        'supports' => array('title','author')  
+        'supports' => array('title')  
     );    
 register_post_type( 'cooperativa' , $args );
 }
@@ -880,7 +878,6 @@ function pmi_hotsite_register() {
        );    
 register_post_type( 'hotsite' , $args );
 }
-register_taxonomy("area-interesse", array("hotsite"), array("hierarchical" => true, "label" => "Áreas de interesse", "singular_label" => "Área de interesse", "rewrite" => true));
 
 add_action('init', 'pmi_hotsite_register');
 
@@ -920,8 +917,6 @@ function pmi_servico_register() {
         'supports' => array( 'title', 'editor', 'thumbnail','author','page-attributes')  
     );    
 register_post_type( 'servico' , $args );
-register_taxonomy("grupo", array("servico"), array("hierarchical" => true, "label" => "Grupo", "singular_label" => "grupo", "rewrite" => true));
-register_taxonomy("tema", array("servico"), array("hierarchical" => true, "label" => "Tema", "singular_label" => "tema", "rewrite" => true));
 }
 
 add_action('init', 'pmi_servico_register');
